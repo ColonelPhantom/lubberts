@@ -1,0 +1,7 @@
+[package]
+name = "lubberts"
+version = "0.1.0"
+authors = ["Quinten Kock <quintenkock@gmail.com>"]
+edition = "2018"
+
+[dependencies]
