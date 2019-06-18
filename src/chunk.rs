@@ -16,6 +16,7 @@ pub struct Chunk  {
 }
 impl Chunk {
     pub fn from_bytes(bytes: &[u8]) -> Result<Self, ParseError> {
+        // Begin by parsing the header
         if bytes[0..4] != [0x1B, 0x4C, 0x75, 0x61] {
             // 1B4C7561 aka (AsciiESC)Lua is the magic number at the start of every Lua bc chunk
             return Err(ParseError::InvalidMagic);
@@ -42,6 +43,8 @@ impl Chunk {
         {
             return Err(ParseError::WrongLuaNumber);
         }
+
+        // Header found to be valid
         let mut c = Chunk {};
         return Ok(c);
     }
