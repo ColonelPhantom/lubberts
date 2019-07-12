@@ -9,6 +9,23 @@ pub enum ParseError {
     WrongSizeT,
     WrongRawInstrSize,
     WrongLuaNumber,
+    InvalidString,
+}
+
+pub struct LuaString {
+    size: crate::SizeT,
+    data: String,
+}
+impl LuaString {
+    pub fn from_bytes(bytes: &[u8]) -> Result<Self, ParseError> {
+        use std::convert::TryInto;
+        let size = crate::SizeT::from_le_bytes(bytes.split_at(std::mem::size_of::<crate::SizeT>()).0.try_into().expect("Error parsing string size"));
+        let data = std::str::from_utf8(&bytes[1..size as usize+1]);
+        match data {
+            Ok(d) => return Ok(LuaString{size, data: String::from(d)}),
+            Err(e) => return Err(ParseError::InvalidString),
+        }
+    }
 }
 
 #[derive(Debug)]
